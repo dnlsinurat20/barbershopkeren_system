@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import random
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+from google.oauth2 import service_account
 from datetime import date, datetime, timedelta
 import urllib.parse
 import time
@@ -157,12 +157,24 @@ if 'nota_terakhir' not in st.session_state:
 # --- FUNGSI KONEKSI DATABASE ---
 @st.cache_resource
 def get_google_sheet(sheet_name):
-    scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
-    creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
-    client = gspread.authorize(creds)
-    return client.open('Barbershop_DB').worksheet(sheet_name)
+    try:
+        # Define Scopes (Cukup Spreadsheet & Drive)
+        scopes = [
+            "https://www.googleapis.com/auth/spreadsheets",
+            "https://www.googleapis.com/auth/drive"
+        ]
+        
+        creds = service_account.Credentials.from_service_account_file(
+            "credentials.json", scopes=scopes
+        )
+        
+        client = gspread.authorize(creds)
+        return client.open('Barbershop_DB').worksheet(sheet_name)
+    except Exception as e:
+        st.error(f"Koneksi Database Gagal: {e}")
+        return None
 
-# --- FUNGSI HELPER: KONTROL DISKON (BARU) ---
+# --- FUNGSI HELPER: KONTROL DISKON ---
 def get_diskon_status():
     try:
         sh = get_google_sheet('Config')
@@ -2252,5 +2264,6 @@ elif menu == "Owner Insight":
 
     elif pass_owner:
         st.error("Password Salah!")
+
 
 
