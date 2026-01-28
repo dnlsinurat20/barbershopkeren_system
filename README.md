@@ -61,7 +61,7 @@ If you want to run this project locally, follow these steps:
 
 ### **1\. Clone the Repository**
 
-git clone \[https://github.com/dnlsinurat20/barbershopkeren_system.git\](https://github.com/dnlsinurat20/barbershopkeren_system.git)  
+git clone https://github.com/dnlsinurat20/barbershopkeren_system.git
 cd barbershop-system
 
 ### **2\. Install Dependencies**
