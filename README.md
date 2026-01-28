@@ -61,7 +61,7 @@ If you want to run this project locally, follow these steps:
 
 ### **1\. Clone the Repository**
 
-git clone \[https://github.com/dnlsinurat20/barbershop-system.git\](https://github.com/dnlsinurat20/barbershop-system.git)  
+git clone \[https://github.com/dnlsinurat20/barbershopkeren-system.git\](https://github.com/dnlsinurat20/barbershopkeren-system.git)  
 cd barbershop-system
 
 ### **2\. Install Dependencies**
@@ -102,5 +102,5 @@ This repository is a **portfolio version** of the live production app.
 
 This project represents my transition from **Data Analysis** to **Data Engineering**. I believe that good analysis starts with good data architecture.
 
-* **LinkedIn:** \ https://www.linkedin.com/in/daniel-sinurat-509951397/?locale=in_ID
-* **Portfolio:** \https://www.linkedin.com/feed/update/urn:li:activity:7417272002664673280/
+* **LinkedIn:** https://www.linkedin.com/in/daniel-sinurat-509951397/?locale=in_ID
+* **Portfolio:** https://www.linkedin.com/feed/update/urn:li:activity:7417272002664673280/
