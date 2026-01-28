@@ -1,9 +1,8 @@
 streamlit
 pandas
 gspread
-oauth2client
+google-auth
 Pillow
-google-api-python-client
-google-auth-httplib2
-google-auth-oauthlib
+Pillow
+altair
 requests
