@@ -333,7 +333,7 @@ def generate_receipt_image(nama, list_items, total_normal, diskon_val, harga_fin
     
     return img
     
-# --- FUNGSI CEK JAM (LOGIKA DURASI & INTERVAL 15 MENIT - REVISI DARIUZ) ---
+# --- FUNGSI CEK JAM (LOGIKA DURASI & INTERVAL 15 MENIT) ---
 def get_jam_tersedia(tanggal_pilihan, kapster_pilihan, durasi_layanan_baru, semua_layanan_db):
     try:
         # 1. SETUP JAM BUKA - TUTUP (Menit)
@@ -2252,3 +2252,4 @@ elif menu == "Owner Insight":
 
     elif pass_owner:
         st.error("Password Salah!")
+
