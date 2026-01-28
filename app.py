@@ -44,11 +44,11 @@ from google.oauth2 import service_account
 
 # --- KONFIGURASI DRIVE ---
 # Masukkan ID Folder Drive yang sudah Anda buat tadi
-FOLDER_ID_DRIVE = "1nxxxxxxBwaueuposGPQMexxxxi_B1w" 
+FOLDER_ID_DRIVE = "YOUR_GOOGLE_DRIVE_FOLDER_ID" 
 
 # --- KONFIGURASI WEB APP ---
 # 👇 PASTE URL PANJANG DARI APPS SCRIPT DI SINI
-SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxKEkZy3Ap5M0Xgibfqfg2ZcNTkq6BNresaD91EGJ3WM6Hxxxxxxx28XXvq7tTdg/exec" 
+SCRIPT_URL = "https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec" 
 
 # --- FUNGSI UPLOAD ---
 def upload_ke_drive(file_buffer, nama_file_simpan):
@@ -880,7 +880,7 @@ elif menu == "Halaman Kasir":
         
     DATA_LAYANAN = get_daftar_layanan() 
 
-    if password == "kasir12345678":
+    if password == "kasirsecrets":
         st.sidebar.success("Login Berhasil")
         
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["🔴 Antrian & Bayar", "✅ Riwayat", "💰 Pengeluaran", "📊 Lapor Bos", "🏆 Mingguan", "🧴 Pomade"])
@@ -1821,7 +1821,7 @@ elif menu == "Owner Insight":
     
     pass_owner = st.sidebar.text_input("Password Owner", type="password")
     
-    if pass_owner == "OWNERabcde12345":
+    if pass_owner == "ownersecrets":
         st.sidebar.success("Akses Diterima ✅")
         
         # --- A. CONTROL PANEL (FITUR KUNCI DISKON) ---
@@ -2252,4 +2252,5 @@ elif menu == "Owner Insight":
 
     elif pass_owner:
         st.error("Password Salah!")
+
 
