@@ -15,7 +15,7 @@ import json
 import altair as alt
 
 # --- KONFIGURASI HALAMAN ---
-st.set_page_config(page_title="TRIPL3 Barbershop System", page_icon="💈", layout="wide")
+st.set_page_config(page_title="Barbershop Keren System", page_icon="💈", layout="wide")
 
 # --- DATA PROFIL KAPSTER ---
 INFO_KAPSTER = {
@@ -50,11 +50,11 @@ from google.oauth2 import service_account
 
 # --- KONFIGURASI DRIVE ---
 # Masukkan ID Folder Drive yang sudah Anda buat tadi
-FOLDER_ID_DRIVE = "1nGF6UB02BwaueuposGPQMe8DiTLi_B1w" 
+FOLDER_ID_DRIVE = "1nxxxxxxBwaueuposGPQMe8DiTLi_B1w" 
 
 # --- KONFIGURASI WEB APP ---
 # 👇 PASTE URL PANJANG DARI APPS SCRIPT DI SINI (JANGAN SAMPAI ADA SPASI)
-SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiJBqeKEkZy3Ap5M0Xgibfqfg2ZcNTkq6BNresaD91EGJ3WM6HeIsoddo28XXvq7tTdg/exec" 
+SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiJBqeKEkZy3Ap5M0Xgibfqfg2ZcNTkq6BNresaD91EGJ3WM6Hxxxxxxx28XXvq7tTdg/exec" 
 
 # --- FUNGSI UPLOAD VERSI ANTI-ERROR ---
 def upload_ke_drive(file_buffer, nama_file_simpan):
@@ -168,7 +168,7 @@ def get_google_sheet(sheet_name):
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     creds = ServiceAccountCredentials.from_json_keyfile_name('credentials.json', scope)
     client = gspread.authorize(creds)
-    return client.open('TRIPL3_Barbershop_DB').worksheet(sheet_name)
+    return client.open('Barbershop_DB').worksheet(sheet_name)
 
 # --- FUNGSI HELPER: KONTROL DISKON (BARU) ---
 def get_diskon_status():
@@ -256,9 +256,9 @@ def generate_receipt_image(nama, list_items, total_normal, diskon_val, harga_fin
         y += img_h + 10
         
     except Exception as e:
-        text_bbox = draw.textbbox((0, 0), "TRIPL3 BARBERSHOP", font=font_title)
+        text_bbox = draw.textbbox((0, 0), "Barbershop Keren", font=font_title)
         x_pos = (W - (text_bbox[2] - text_bbox[0])) / 2
-        draw.text((x_pos, y), "TRIPL3 BARBERSHOP", font=font_title, fill='black')
+        draw.text((x_pos, y), "Barbershop Keren", font=font_title, fill='black')
         y += 40
 
     # 4. ALAMAT & KONTAK
@@ -751,7 +751,7 @@ menu = st.sidebar.selectbox("Pilih Mode Aplikasi", ["Booking Pelanggan", "Halama
 
 # 1. BOOKING PELANGGAN
 if menu == "Booking Pelanggan":
-    st.title("💈TRIPL3 Barbershop")
+    st.title("💈Barbershop Keren")
     
     # --- PEMBERSIH FORM ---
     # Logika: Jika ada bendera 'sukses_reset', paksa kosongkan semua input
@@ -921,7 +921,7 @@ elif menu == "Halaman Kasir":
         
     DATA_LAYANAN = get_daftar_layanan() 
 
-    if password == "admin123":
+    if password == "kasir12345678":
         st.sidebar.success("Login Berhasil")
         
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["🔴 Antrian & Bayar", "✅ Riwayat", "💰 Pengeluaran", "📊 Lapor Bos", "🏆 Mingguan", "🧴 Pomade"])
@@ -952,7 +952,7 @@ elif menu == "Halaman Kasir":
 
                     pesan_nota = (
                         f"Hey Bro *{data_nota['nama']}*! 👋\n"
-                        f"Terima kasih sudah mampir di *TRIPL3 Barbershop*.\n\n"
+                        f"Terima kasih sudah mampir di *Barbershop Keren*.\n\n"
                         f"{pesan_tambahan}\n"
                         f"You look sharp! See you next time. 💈"
                     )
@@ -1585,7 +1585,7 @@ elif menu == "Halaman Kasir":
 
                     # --- G. GENERATE WA ---
                     pesan_laporan = (
-                        f"*LAPORAN HARIAN TRIPL3 BARBERSHOP*\n"
+                        f"*LAPORAN HARIAN Barbershop Keren*\n"
                         f"📅 Tanggal: {tanggal_indo(tgl_laporan)}\n"
                         f"------------------------------\n"
                         f"*📊 STATISTIK OPERASIONAL*\n\n"
@@ -1790,7 +1790,7 @@ elif menu == "Halaman Kasir":
                         st.altair_chart(alt.Chart(chart_df).mark_bar().encode(x='Kapster', y='Jumlah Kepala'), use_container_width=True)
 
                         # WA
-                        header_wa = f"*RAPOR MINGGUAN TRIPL3 BARBERSHOP*\nPeriode: {tanggal_indo(start_week)} - {tanggal_indo(end_week)}\n==============================\n"
+                        header_wa = f"*RAPOR MINGGUAN Barbershop Keren*\nPeriode: {tanggal_indo(start_week)} - {tanggal_indo(end_week)}\n==============================\n"
                         body_wa = ""
                         for k in kapsters:
                             d = laporan[k]
@@ -1886,7 +1886,7 @@ elif menu == "Owner Insight":
     
     pass_owner = st.sidebar.text_input("Password Owner", type="password")
     
-    if pass_owner == "BERKAT2026":
+    if pass_owner == "OWNERabcde12345":
         st.sidebar.success("Akses Diterima ✅")
         
         # --- A. CONTROL PANEL (FITUR KUNCI DISKON) ---
@@ -2324,6 +2324,7 @@ elif menu == "Owner Insight":
 
     elif pass_owner:
         st.error("Password Salah!")
+
 
 
 
