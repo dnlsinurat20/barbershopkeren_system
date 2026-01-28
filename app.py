@@ -15,21 +15,17 @@ import json
 import altair as alt
 
 # --- KONFIGURASI HALAMAN ---
-st.set_page_config(page_title="Barbershop Keren System", page_icon="💈", layout="wide")
+st.set_page_config(page_title="Barbershop Keren", page_icon="💈", layout="wide")
 
 # --- DATA PROFIL KAPSTER ---
 INFO_KAPSTER = {
-    "Dariuz Hia": {
-        "deskripsi": "Senior Hairstylist. Spesialis Haircut Modern, Haircut Classic, & Koreanstyle",
-        "img": "dariuz.jpeg" 
+    "Kenzo": {
+        "deskripsi": "Master of Classic Cuts. Spesialis Pompadour, Executive Contour, dan Signature Hot Towel Shave.",
+        "img": "Kenzo.jpeg" 
     },
-    "David": {
-        "deskripsi": "Senior Haircut. Spesialis Haircut Modern, Haircut Classic & Hairstyle.",
-        "img": "david.jpeg"
-    },
-    "Herry": {
-        "deskripsi": "Senior haircut. Spesialis Haircut modern, Haircut Classic & Hairstyle.",
-        "img": "herry.jpeg"
+    "Arka": {
+        "deskripsi": "Creative Barber & Color Specialist. Ahli dalam Fashion Hair Color, Hair Tattoo/Grooming, dan Urban Modern Cut.",
+        "img": "Arka.jpeg"
     }
 }
 
@@ -43,20 +39,18 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# --- IMPORT LIBRARY BARU (Untuk Drive) ---
-# Jangan hapus import lama Anda (oauth2client), biarkan saja.
-# Tambahkan import baru ini di bawahnya:
+# --- IMPORT LIBRARY (Untuk Drive) ---
 from google.oauth2 import service_account
 
 # --- KONFIGURASI DRIVE ---
 # Masukkan ID Folder Drive yang sudah Anda buat tadi
-FOLDER_ID_DRIVE = "1nxxxxxxBwaueuposGPQMe8DiTLi_B1w" 
+FOLDER_ID_DRIVE = "1nxxxxxxBwaueuposGPQMexxxxi_B1w" 
 
 # --- KONFIGURASI WEB APP ---
-# 👇 PASTE URL PANJANG DARI APPS SCRIPT DI SINI (JANGAN SAMPAI ADA SPASI)
-SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxiJBqeKEkZy3Ap5M0Xgibfqfg2ZcNTkq6BNresaD91EGJ3WM6Hxxxxxxx28XXvq7tTdg/exec" 
+# 👇 PASTE URL PANJANG DARI APPS SCRIPT DI SINI
+SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxxxxxxKEkZy3Ap5M0Xgibfqfg2ZcNTkq6BNresaD91EGJ3WM6Hxxxxxxx28XXvq7tTdg/exec" 
 
-# --- FUNGSI UPLOAD VERSI ANTI-ERROR ---
+# --- FUNGSI UPLOAD ---
 def upload_ke_drive(file_buffer, nama_file_simpan):
     try:
         # 1. Konversi Gambar ke Base64
@@ -88,8 +82,6 @@ def upload_ke_drive(file_buffer, nama_file_simpan):
     except Exception as e:
         st.error(f"Error Koneksi Python: {e}")
         return None 
-        # Di sini kita return None, BUKAN return hasil
-        # Jadi kalau error, tidak akan memaksa memanggil variabel yang tidak ada.
     
 # --- FUNGSI FORMAT ANGKA (RUPIAH) ---
 def format_angka(nilai):
@@ -197,7 +189,6 @@ def get_daftar_layanan():
             nama = item['Nama_Layanan']
             
             # BERSIHKAN DURASI (Ambil Angkanya Saja)
-            # Contoh: "45 Menit" -> jadi 45 (int)
             durasi_raw = str(item['Durasi']).lower().replace('menit', '').replace('m', '').strip()
             try:
                 durasi_int = int(durasi_raw)
@@ -349,9 +340,9 @@ def get_jam_tersedia(tanggal_pilihan, kapster_pilihan, durasi_layanan_baru, semu
         # Default Jam Buka (10:00) untuk kapster umum
         JAM_BUKA_MENIT = 10 * 60  
         
-        # --- REVISI KHUSUS DARIUZ HIA ---
-        # Jika Dariuz, jam buka diubah jadi 14:00 (Jam 2 Siang)
-        if kapster_pilihan == "Dariuz Hia":
+        # --- KHUSUS KENZO ---
+        # Jika Kenzo, jam buka diubah jadi 14:00 (Jam 2 Siang)
+        if kapster_pilihan == "Kenzo":
             JAM_BUKA_MENIT = 14 * 60 
         # --------------------------------
         
@@ -423,7 +414,7 @@ def get_jam_tersedia(tanggal_pilihan, kapster_pilihan, durasi_layanan_baru, semu
 
     except Exception as e:
         # Fallback jika error
-        return ["14:00", "15:00", "16:00"] if kapster_pilihan == "Dariuz Hia" else ["10:00", "11:00", "12:00"]
+        return ["14:00", "15:00", "16:00"] if kapster_pilihan == "Kenzo" else ["10:00", "11:00", "12:00"]
 
 # --- HELPERS ---
 def format_nomor_wa(nomor):
@@ -522,15 +513,13 @@ def sync_database_pelanggan(wa_input, nama_final, kapster_pilihan):
         # Format Data
         wa_pk = format_wa_0(wa_input) # "08..."
         wa_62 = "62" + wa_pk[1:]      # "628..."
-        
-        # Kita baca semua dulu untuk mencari (karena .find() kadang gagal di format angka)
-        # Ini lebih lambat tapi lebih akurat
+                
         cell = None
         try:
             # Cari string "08..."
             cell = sheet.find(wa_pk)
         except:
-            pass # Kalau error berarti tidak ketemu
+            pass 
             
         if cell:
             # --- SKENARIO UPDATE ---
@@ -541,7 +530,6 @@ def sync_database_pelanggan(wa_input, nama_final, kapster_pilihan):
         else:
             # --- SKENARIO INSERT ---
             # Paksa simpan sebagai string dengan tanda kutip satu (') di excel
-            # Namun gspread biasanya pintar, coba simpan biasa dulu
             new_row = [wa_input, wa_62, wa_pk, nama_final, kapster_pilihan]
             sheet.append_row(new_row)
             
@@ -565,11 +553,7 @@ def get_next_invoice_number():
         
         next_sequence = 1 # Default jika belum ada transaksi bulan ini
         
-        if not df.empty and 'Keterangan' in df.columns:
-            # 3. Filter Data Bulan Ini (Opsional: Agar lebih cepat)
-            # Kita cari yang mengandung prefix nota bulan ini di kolom Keterangan
-            # Asumsi format di Keterangan: "Potong Rambut [2601005]"
-            
+        if not df.empty and 'Keterangan' in df.columns:          
             import re
             
             max_seq = 0
@@ -601,7 +585,7 @@ def get_next_invoice_number():
         print(f"Error Generate Nota: {e}")
         return datetime.now().strftime("%y%m%H%M")
 
-# --- FUNGSI PROSES PEMBAYARAN (FINAL FIX: KAPSTER NAME + DISKON LOGIC) ---
+# --- FUNGSI PROSES PEMBAYARAN ---
 def proses_pembayaran(baris_ke, nama_pelanggan, list_items, metode_bayar, kapster, diskon_nominal, harga_akhir):
     try:
         sheet_booking = get_google_sheet('Booking')
@@ -637,17 +621,17 @@ def proses_pembayaran(baris_ke, nama_pelanggan, list_items, metode_bayar, kapste
                 item['harga']
             ])
             
-        # B. Masukkan Baris Diskon (REVISI: Ada Nama Kapster)
+        # B. Masukkan Baris Diskon 
         if diskon_nominal > 0:
-            # Kita tambahkan nama kapster di sini
+            # Ttambahkan nama kapster di sini
             ket_diskon = f"[{no_nota}] Promo/Diskon Transaksi - {kapster}"
             
             rows_to_append.append([
                 tgl_skrg, 
                 jam_skrg, 
                 "Potongan Diskon", 
-                ket_diskon,      # <--- Sudah ada nama kapster
-                -diskon_nominal  # Nilai Negatif
+                ket_diskon,      
+                -diskon_nominal  
             ])
             
         # Kirim ke Google Sheet
@@ -662,17 +646,14 @@ def proses_pembayaran(baris_ke, nama_pelanggan, list_items, metode_bayar, kapste
 def batalkan_booking(baris_ke, alasan):
     try:
         sheet_booking = get_google_sheet('Booking')
-        # Update Status (Kolom G / 7) menjadi "Batal"
         sheet_booking.update_cell(baris_ke + 2, 7, "Batal")
         
-        # Update Alasan (Kolom J / 10) - Pastikan di Google Sheet kolom J sudah ada header "Alasan"
-        # Jika kolom J belum ada, gspread biasanya otomatis mengisi ke kolom kosong berikutnya
         sheet_booking.update_cell(baris_ke + 2, 10, alasan)
         return True
     except Exception as e:
         st.error(f"Gagal membatalkan: {e}"); return False
 
-# --- UPDATE FUNGSI PENYIMPANAN (MENERIMA LINK FOTO) ---
+# --- FUNGSI PENYIMPANAN ---
 def simpan_transaksi_pomade(nama_pomade, nominal, keterangan, link_foto):
     try:
         # Buka Sheet Pomade
@@ -703,25 +684,16 @@ def get_rekap_pomade_harian():
 
         df = pd.DataFrame(data)
 
-        # 1. Filter KHUSUS Hari Ini Saja
-        # (Penting: Kita filter dulu sebelum kolom tanggalnya dibuang)
         waktu_skrg = datetime.utcnow() + timedelta(hours=7)
         tgl_hari_ini = waktu_skrg.strftime("%Y-%m-%d")
         
-        # Pastikan header di Google Sheet Anda bernama 'Tanggal'
         df_filtered = df[df['Tanggal'] == tgl_hari_ini].copy()
 
-        # 2. HAPUS Kolom Tanggal (Sesuai request Anda)
-        # Karena ini rekap harian, tanggal pasti sama semua, jadi bisa dibuang.
         if 'Tanggal' in df_filtered.columns:
             df_filtered = df_filtered.drop(columns=['Tanggal'])
             df_filtered = df_filtered.drop(columns=['Link_Bukti'])
 
-        # 3. (Opsional) Rapikan Urutan Kolom
-        # Kita atur agar Jam muncul paling kiri. Sesuaikan nama kolom dengan header Sheet Anda.
-        kolom_urut = ['Jam', 'Nama_Pomade', 'Nominal', 'Keterangan', 'Link_Bukti']
-        
-        # Hanya ambil kolom yang benar-benar ada di data (untuk menghindari error)
+        kolom_urut = ['Jam', 'Nama_Pomade', 'Nominal', 'Keterangan', 'Link_Bukti']       
         kolom_final = [k for k in kolom_urut if k in df_filtered.columns]
         
         return df_filtered[kolom_final]
@@ -769,13 +741,9 @@ if menu == "Booking Pelanggan":
     col_kiri, col_kanan = st.columns([1, 2])
     
     with col_kiri:
-        # ... (Kode di atas: st.title, dll) ...
-
-    # --- PERSIAPAN DATA KAPSTER ---
-    # Pastikan urutan nama ini SAMA PERSIS dengan urutan foto/kolom Anda
-        list_kapster = ["Dariuz Hia", "David", "Herry"] 
+        list_kapster = ["Kenzo", "Arka"] 
     
-# --- 1. PILIH KAPSTER (LOGIKA ACAK/DINAMIS) ---
+    # --- 1. PILIH KAPSTER (LOGIKA ACAK/DINAMIS) ---
     if 'default_kapster_index' not in st.session_state:
         st.session_state['default_kapster_index'] = random.randint(0, len(list_kapster) - 1)
 
@@ -793,12 +761,11 @@ if menu == "Booking Pelanggan":
     with col_kiri:
         file_foto = INFO_KAPSTER[kapster]['img']
         
-        # Cek apakah file foto ada di folder?
         if os.path.exists(file_foto):
             st.image(file_foto, width=200, use_container_width=True)
         else:
             # Gambar cadangan jika file tidak ditemukan
-            st.image("https://cdn-icons-png.flaticon.com/512/1995/1995539.png", caption="Foto belum tersedia", width=150)
+            st.image("https://cdn-icons-png.flaticon.com/512/1995/1995515.png", caption="Foto belum tersedia", width=150)
             
     # --- 4. ISI KOLOM KANAN (FORM & INFO) ---
     with col_kanan:
@@ -819,8 +786,7 @@ if menu == "Booking Pelanggan":
         tgl = st.date_input("Tanggal Booking", hari_ini_wib, format="DD/MM/YYYY")
         st.caption(f"📅 Pilihan: **{tanggal_indo(tgl)}**")
                             
-        # --- UPDATE CARA PANGGIL JAM ---
-        # Kita masukkan Durasi Layanan Pilihan User & Database Lengkap
+        # --- CARA PANGGIL JAM ---
         durasi_user = detail['Durasi']
         jam_tersedia = get_jam_tersedia(tgl, kapster, durasi_user, DATA_LAYANAN)
         # -------------------------------
@@ -833,7 +799,6 @@ if menu == "Booking Pelanggan":
             jam = st.selectbox("Pilih Jam (Interval 15 Menit)", jam_tersedia)
             tombol_aktif = True
    
-    # BATAS AKHIR KOLOM C1 & C2 (Setelah pemilihan Jam)
     st.write("---") 
     st.subheader("Data Diri Pemesan")
 
@@ -869,13 +834,12 @@ if menu == "Booking Pelanggan":
                 pesan_notifikasi = "Hello our new customer! Silakan isi nama Kamu ya. 😊"
                 tipe_notifikasi = "info"
         
-        # Simpan nomor ini agar tidak dicek berulang-ulang
         st.session_state['last_wa_checked'] = wa
 
     # 2. INPUT NAMA
     nama = st.text_input("Nama Pelanggan", placeholder="Nama Anda...", key="nama_pelanggan_input")
     
-    # 3. TAMPILKAN NOTIFIKASI DI BAWAH KOLOM NAMA (POSISI STRATEGIS)
+    # 3. TAMPILKAN NOTIFIKASI DI BAWAH KOLOM NAMA 
     if pesan_notifikasi:
         if tipe_notifikasi == "success":
             st.success(pesan_notifikasi, icon="✅")
@@ -889,20 +853,15 @@ if menu == "Booking Pelanggan":
         if nama and wa and jam != "Penuh":
             with st.spinner("Sedang Mendaftarkan Booking..."):
                 
-                # A. SIMPAN KE SHEET BOOKING
+                # SIMPAN KE SHEET BOOKING
                 sukses_booking = simpan_booking(nama, wa, kapster, layanan_pilihan, tgl, jam)
                 
                 if sukses_booking:
-                    # B. UPDATE DATABASE PELANGGAN
+                    # UPDATE DATABASE PELANGGAN
                     sync_database_pelanggan(wa, nama, kapster)
                     
-                    # ... (Kode Simpan & Update Database di atasnya biarkan sama) ...
-                    
-                    # ... (Kode A & B di atasnya biarkan sama) ...
-                    
-                    # ... (Kode di atasnya tetap sama) ...
-                    
-                    # C. RESET & SUKSES
+                  
+                    # RESET & SUKSES
                     st.success(f"✅ Booking Berhasil! Sampai jumpa {nama}.")
                     st.snow()
                     
@@ -962,7 +921,7 @@ elif menu == "Halaman Kasir":
                     st.write("---")
                     if st.button("Tutup / Transaksi Baru"): st.session_state['nota_terakhir'] = None; st.rerun()
 
-            # B. MODAL KERJA KASIR
+            # MODAL KERJA KASIR
             else:
                 if st.button("🔄 Refresh Data Antrian"): st.rerun()
                 
@@ -1215,14 +1174,11 @@ elif menu == "Halaman Kasir":
 
                     go_total_final = go_total_normal - go_nominal_diskon
                     if go_total_final < 0: go_total_final = 0
-                    
-                    # ... (Setelah logika perhitungan go_total_final) ...
-                    
+                                      
                     go_total_final = go_total_normal - go_nominal_diskon
                     if go_total_final < 0: go_total_final = 0
                     
                     # --- TAMPILAN TOTAL DENGAN DISKON (UPDATE) ---
-                    # Format: Total Akhir (Normal: 100.000 | Disc: 10.000)
                     st.markdown(f"""
                     **Total Akhir: Rp {int(go_total_final):,}** *(Normal: {int(go_total_normal):,} | Potongan: {int(go_nominal_diskon):,})*
                     """.replace(',', '.'))
@@ -1271,7 +1227,7 @@ elif menu == "Halaman Kasir":
                         else:
                             st.warning("Nama dan WA wajib diisi.")
         
-        # --- TAB 2: RIWAYAT & CETAK ULANG (VERSI RINGKAS - KHUSUS NO NOTA) ---
+        # --- TAB 2: RIWAYAT & CETAK ULANG ---
         with tab2:
             st.header("✅ Riwayat & Cetak Ulang")
             
@@ -1308,7 +1264,7 @@ elif menu == "Halaman Kasir":
                             st.dataframe(df_filtered[cols], use_container_width=True, hide_index=True)
                             st.write("---")
                             
-                            # --- BAGIAN CETAK ULANG (SIMPLE) ---
+                            # --- BAGIAN CETAK ULANG ---
                             st.subheader("🖨️ Cetak Ulang Struk")
                             
                             # Filter Selesai
@@ -1324,7 +1280,6 @@ elif menu == "Halaman Kasir":
                                 
                                 pilihan = st.selectbox("Pilih Transaksi:", opsi, format_func=lambda x: x[1])
                                 
-                                # --- GANTI DARI BARIS INI KE BAWAH ---
                                 if pilihan and st.button("Cetak Struk"):
                                     idx_sel, _ = pilihan
                                     d_row = df_siap.iloc[idx_sel]
@@ -1356,11 +1311,8 @@ elif menu == "Halaman Kasir":
                                                 items = [{'nama': f"Layanan {d_row['Layanan']}", 'harga': 0}]
                                                 st.caption("⚠️ Detail item tidak ditemukan, menggunakan data default.")
     
-                                        # 3. GENERATE GAMBAR (SOLUSI FINAL: SEMUA PAKAI NAMA)
-                                        # Kita panggil dengan menyebut nama parameternya satu per satu
-                                        # agar tidak ada yang tertukar atau dianggap hilang.
+                                        # 3. GENERATE GAMBAR
                                         try:
-                                            # Pastikan kita ambil tanggal dari row data
                                             tgl_fix = str(d_row['Tanggal']) if 'Tanggal' in d_row else str(datetime.now().date())
                                             
                                             img = generate_receipt_image(
@@ -1416,8 +1368,6 @@ elif menu == "Halaman Kasir":
             
             list_rekomendasi.insert(0, "📝 Input Nama Baru...")
             
-            # ... (SISA KODE KE BAWAH: FORM INPUT & TOMBOL SIMPAN, TIDAK PERLU DIUBAH) ...
-            # ... (Tinggal copy-paste bagian form input dari kode sebelumnya) ...
             pilih_nama = st.selectbox("1. Nama Pengeluaran (Ketik untuk cari)", list_rekomendasi, index=1)
             
             nama_final = ""
@@ -1614,7 +1564,7 @@ elif menu == "Halaman Kasir":
                 except Exception as e:
                     st.error(f"Gagal hitung rekap: {e}")      
 
-        # --- TAB 5: LAPORAN MINGGUAN (FINAL FIX: UPGRADE MERGE, ADD-ON SEPARATE) ---
+        # --- TAB 5: LAPORAN MINGGUAN ---
         with tab5:
             st.header("🏆 Laporan Prestasi Mingguan")
             
@@ -1674,44 +1624,35 @@ elif menu == "Halaman Kasir":
                                 items_neg = group[group['Nominal'] < 0]['Nominal'].sum() # Total Diskon Nota ini
                                 
                                 # --- ALGORITMA MERGE UPGRADE ---
-                                # 1. Cari Total Uang Upgrade di nota ini
                                 total_biaya_upgrade = sum([x['Nominal'] for x in items_pos if "biaya upgrade" in str(x['Item']).lower()])
                                 
-                                # 2. Cari Item Utama (Target Merge) -> Yg ada tulisan "Up from"
                                 target_idx = -1
                                 for i, item in enumerate(items_pos):
                                     if "up from" in str(item['Item']).lower():
                                         target_idx = i
                                         break
                                 
-                                # 3. Proses List Item Akhir
                                 final_items_nota = []
                                 
                                 if target_idx != -1 and total_biaya_upgrade > 0:
-                                    # KETEMU PASANGANNYA: Merge Biaya Upgrade ke Item Utama
                                     for i, item in enumerate(items_pos):
                                         nama_lower = str(item['Item']).lower()
                                         
                                         if i == target_idx:
-                                            # Ini Item Utama: Tambahkan uang upgrade, Bersihkan Nama
                                             new_nominal = item['Nominal'] + total_biaya_upgrade
                                             new_name = item['Item'].split(' (Up from')[0].strip() # Buang "(Up from...)"
                                             final_items_nota.append({'Item': new_name, 'Nominal': new_nominal})
                                         
                                         elif "biaya upgrade" in nama_lower:
-                                            # Ini Item Biaya Upgrade: SKIP (Sudah dipindah uangnya)
                                             continue 
                                         
                                         else:
-                                            # Ini Add-on / Item Lain: Masukkan apa adanya
                                             final_items_nota.append({'Item': item['Item'], 'Nominal': item['Nominal']})
                                 else:
-                                    # TIDAK ADA MERGE (Normal): Masukkan semua kecuali Biaya Upgrade yg stand alone (jarang)
                                     for item in items_pos:
                                         final_items_nota.append({'Item': item['Item'], 'Nominal': item['Nominal']})
 
                                 # --- CATAT KE STATISTIK ---
-                                # Loop item yang sudah rapi (Add-on terpisah, Upgrade tergabung)
                                 nota_gross = 0
                                 for f_item in final_items_nota:
                                     nm = f_item['Item']
@@ -1726,9 +1667,7 @@ elif menu == "Halaman Kasir":
                                 k_gross += nota_gross
                                 k_disc += abs(items_neg)
                                 k_net += (nota_gross - abs(items_neg))
-
-                            # --- END LOOP NOTA ---
-                            
+                          
                             # Siapkan Data Tabel
                             detail_list = []
                             for m, stat in stats_menu.items():
@@ -1813,7 +1752,6 @@ elif menu == "Halaman Kasir":
             with col_input:
                 st.subheader("Input Penjualan")
                 
-                # Kita gunakan form tanpa clear_on_submit dulu agar file tidak hilang saat proses
                 with st.form("form_pomade", clear_on_submit=True):
                     nama_p = st.text_input("Nama Produk / Pomade", placeholder="Blue Water Based" )
                     harga_p = st.number_input("Nominal (Rp)", min_value=0, step=1000)
@@ -1822,10 +1760,7 @@ elif menu == "Halaman Kasir":
                     st.write("---")
                     st.caption("Foto Barang Terjual (Wajib)")
                     
-                    # --- PERUBAHAN DI SINI (GANTI JADI FILE UPLOADER) ---
-                    # User bisa pilih: Kamera atau Galeri
-                    gambar_pomade = st.file_uploader("Upload Foto", type=['jpg', 'png', 'jpeg'])
-                    
+                    gambar_pomade = st.file_uploader("Upload Foto", type=['jpg', 'png', 'jpeg'])                    
                     submit_pomade = st.form_submit_button("Simpan Transaksi & Upload", type="primary")
                     
                     if submit_pomade:
@@ -2123,26 +2058,21 @@ elif menu == "Owner Insight":
             st.header("💰 Input Pengeluaran Owner")
             st.caption("Gunakan ini untuk mencatat pengeluaran besar (Gaji, Sewa, Maintenance).")
             
-            # 1. Definisi Data & Fungsi Reset (Harus di paling atas tab ini)
             list_rekomendasi = ["Gaji Kapster", "Sewa Ruko", "Belanja Logistik Bulanan", "Maintenance Alat"]
             
-            # Fungsi Callback: Dijalankan SEBELUM halaman reload
             def reset_form_pengeluaran():
                 st.session_state['own_select'] = list_rekomendasi[0] # Reset ke pilihan pertama
                 st.session_state['own_text'] = ""
                 st.session_state['own_nom'] = 0
                 st.session_state['own_ket'] = ""
             
-            # 2. Inisialisasi Session State (Agar tidak error saat pertama buka)
             if 'own_select' not in st.session_state: st.session_state['own_select'] = list_rekomendasi[0]
             if 'own_text' not in st.session_state: st.session_state['own_text'] = ""
             if 'own_nom' not in st.session_state: st.session_state['own_nom'] = 0
             if 'own_ket' not in st.session_state: st.session_state['own_ket'] = ""
 
-            # 3. Widget Input
             pilih_nama = st.selectbox("Nama Pengeluaran", list_rekomendasi + ["📝 Input Baru..."], key="own_select")
             
-            # Logika Text Input: Muncul hanya jika pilih 'Input Baru', tapi valuenya diikat session_state
             nama_final = pilih_nama
             if pilih_nama == "📝 Input Baru...":
                 nama_final = st.text_input("Ketik Nama Pengeluaran", key="own_text")
@@ -2188,8 +2118,6 @@ elif menu == "Owner Insight":
                     else:
                         st.error("Gagal menyimpan ke database.")
 
-            # 5. Tombol Reset (Menggunakan on_click Callback)
-            # Ini kuncinya: on_click akan menjalankan fungsi reset_form_pengeluaran DULUAN, baru reload halaman.
             st.button("🔄 Input Lagi / Bersihkan Form", on_click=reset_form_pengeluaran)
 
         # --- TAB 3: PROFIT & SHARE ---
@@ -2324,68 +2252,3 @@ elif menu == "Owner Insight":
 
     elif pass_owner:
         st.error("Password Salah!")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
