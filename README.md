@@ -1,4 +1,4 @@
-# **TRIPL3 Barbershop Management System 💈**
+# **Barbershop Keren Management System 💈**
 
 **"Stop cleaning data downstream. Start fixing it upstream."**
 
@@ -6,7 +6,7 @@ An end-to-end Booking & Point of Sales (POS) system engineered to solve data qua
 
 ## **📖 The Context (Why I Built This)**
 
-In a previous [**Data Audit Project**](https://www.google.com/search?q=LINK_TO_YOUR_PREVIOUS_LINKEDIN_POST), I analyzed 3 years of historical data from this barbershop. The findings were critical: **Revenue stagnation wasn't a business failure; it was a data visibility failure.**
+In a previous [**Data Audit Project**](https://www.linkedin.com/feed/update/urn:li:activity:7417272002664673280/), I analyzed ten months of historical data from this barbershop. The findings were critical: **Revenue stagnation wasn't a business failure; it was a data visibility failure.**
 
 * **Problem:** Manual entry led to 2500% duplication in customer records (e.g., "Fatur" vs "Faturr").  
 * **Problem:** Revenue leakage due to unrecorded discounts and service upgrades.  
@@ -61,7 +61,7 @@ If you want to run this project locally, follow these steps:
 
 ### **1\. Clone the Repository**
 
-git clone \[https://github.com/yourusername/barbershop-system.git\](https://github.com/yourusername/barbershop-system.git)  
+git clone \[https://github.com/dnlsinurat20/barbershop-system.git\](https://github.com/dnlsinurat20/barbershop-system.git)  
 cd barbershop-system
 
 ### **2\. Install Dependencies**
@@ -102,5 +102,5 @@ This repository is a **portfolio version** of the live production app.
 
 This project represents my transition from **Data Analysis** to **Data Engineering**. I believe that good analysis starts with good data architecture.
 
-* **LinkedIn:** \[Your LinkedIn Profile URL\]  
-* **Portfolio:** \[Link to your previous PDF portfolio if hosted\]
+* **LinkedIn:** \ https://www.linkedin.com/in/daniel-sinurat-509951397/?locale=in_ID
+* **Portfolio:** \https://www.linkedin.com/feed/update/urn:li:activity:7417272002664673280/
